@@ -15,7 +15,7 @@ func main() {
 	writeFile("output.json", string(jsonOutput))
 
 	fmt.Println("Generation...")
-	playGround()
+	loop()
 }
 
 func readFile(filename string) string {

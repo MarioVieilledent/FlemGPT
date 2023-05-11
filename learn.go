@@ -6,19 +6,11 @@ import (
 	"strings"
 )
 
-const depth int = 1 // We take in account words until n-depth before the word analyzed, minimum is of course 1
+const depth int = 20 // We take in account words until n-depth before the word analyzed, minimum is of course 1
 
 var tokenArray []string = []string{}
 var stats map[string]map[string][]int = map[string]map[string][]int{} // Unique instance of stats
 var jsonOutput []byte = []byte{}                                      // Output to write in json
-
-type rawInts = map[string]wordStats
-
-type wordStats struct {
-	IsFirst       int              `json:"isFirst"`       // Number of times the word appears at the beginning of a paragraph
-	IsLast        int              `json:"isLast"`        // Number of times the word appears at the end of a paragraph
-	PreviousWords []map[string]int `json:"previousWords"` // List (n-1, n-2) of map of all words possibles and their occurrences before the word analyzed
-}
 
 func learn(input string) {
 	// Tokenise input
@@ -51,6 +43,11 @@ func tokenize(input string) [][]string {
 		tokens = append(tokens, []string{})
 
 		words := strings.Split(line, " ")
+
+		// Reduce as much as possible number of tokens (by removing some chars, putting everything in lowerCase)
+		for k, word := range words {
+			words[k] = simplify(word)
+		}
 		tokens[k] = words
 	}
 
@@ -69,6 +66,7 @@ func createTokenArray(tokenizedInput [][]string) {
 			}
 		}
 	}
+
 	// Creation of stat array
 	for _, word1 := range tokenArray {
 		stats[word1] = map[string][]int{}
@@ -86,14 +84,16 @@ func train(tokenizedInput [][]string) {
 				for i := index - 1; i >= index-depth; i-- {
 					if i >= 0 {
 						prevWord := paragraph[i]
-						if stats[wordToAnalyze][prevWord] != nil {
-							stats[wordToAnalyze][prevWord][j]++
-						} else {
-							fmt.Println("Nil []int for word: " + wordToAnalyze + " and prev: " + prevWord)
+						if prevWord != "" && prevWord != "\n" && prevWord != "\r" {
+							if stats[wordToAnalyze][prevWord] != nil {
+								stats[wordToAnalyze][prevWord][j]++
+							} else {
+								fmt.Println("Nil []int for word: " + wordToAnalyze + " and prev: " + prevWord)
+							}
 						}
 					}
+					j++
 				}
-				j++
 			}
 		}
 	}
@@ -118,14 +118,47 @@ func contains(arr []string, str string) bool {
 	return false
 }
 
-// Get index of elem in array
-/*
-func indexOf(arr []string, str string) int {
-	for i := 0; i < len(arr); i++ {
-		if arr[i] == str {
-			return i
-		}
-	}
-	return -1
+func simplify(word string) string {
+	simplified := strings.ToLower(word)
+	simplified = strings.ReplaceAll(simplified, "\n", "")
+	simplified = strings.ReplaceAll(simplified, "\r", "")
+	simplified = strings.ReplaceAll(simplified, ".", "")
+	simplified = strings.ReplaceAll(simplified, ",", "")
+	simplified = strings.ReplaceAll(simplified, ";", "")
+	simplified = strings.ReplaceAll(simplified, "?", "")
+	simplified = strings.ReplaceAll(simplified, "!", "")
+	simplified = strings.ReplaceAll(simplified, ":", "")
+	simplified = strings.ReplaceAll(simplified, "'", "")
+	simplified = strings.ReplaceAll(simplified, "-", "")
+	simplified = strings.ReplaceAll(simplified, "_", "")
+	simplified = strings.ReplaceAll(simplified, "(", "")
+	simplified = strings.ReplaceAll(simplified, ")", "")
+	simplified = strings.ReplaceAll(simplified, "[", "")
+	simplified = strings.ReplaceAll(simplified, "]", "")
+	simplified = strings.ReplaceAll(simplified, "{", "")
+	simplified = strings.ReplaceAll(simplified, "}", "")
+	simplified = strings.ReplaceAll(simplified, "~", "")
+	simplified = strings.ReplaceAll(simplified, "&", "")
+	simplified = strings.ReplaceAll(simplified, "#", "")
+	simplified = strings.ReplaceAll(simplified, "\"", "")
+	simplified = strings.ReplaceAll(simplified, "|", "")
+	simplified = strings.ReplaceAll(simplified, "^", "")
+	simplified = strings.ReplaceAll(simplified, "@", "")
+	simplified = strings.ReplaceAll(simplified, "=", "")
+	simplified = strings.ReplaceAll(simplified, "+", "")
+	simplified = strings.ReplaceAll(simplified, "/", "")
+	simplified = strings.ReplaceAll(simplified, "*", "")
+	simplified = strings.ReplaceAll(simplified, "%", "")
+	simplified = strings.ReplaceAll(simplified, "\\", "")
+	simplified = strings.ReplaceAll(simplified, "0", "")
+	simplified = strings.ReplaceAll(simplified, "1", "")
+	simplified = strings.ReplaceAll(simplified, "2", "")
+	simplified = strings.ReplaceAll(simplified, "3", "")
+	simplified = strings.ReplaceAll(simplified, "4", "")
+	simplified = strings.ReplaceAll(simplified, "5", "")
+	simplified = strings.ReplaceAll(simplified, "6", "")
+	simplified = strings.ReplaceAll(simplified, "7", "")
+	simplified = strings.ReplaceAll(simplified, "8", "")
+	simplified = strings.ReplaceAll(simplified, "9", "")
+	return simplified
 }
-*/
