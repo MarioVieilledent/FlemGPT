@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
-const depth int = 20 // We take in account words until n-depth before the word analyzed, minimum is of course 1
+const depth int = 8 // We take in account words until n-depth before the word analyzed, minimum is of course 1
 
 var tokenArray []string = []string{}
 var stats map[string]map[string][]int = map[string]map[string][]int{} // Unique instance of stats
@@ -66,6 +67,8 @@ func createTokenArray(tokenizedInput [][]string) {
 			}
 		}
 	}
+
+	fmt.Println("Number of words: " + strconv.Itoa(len(tokenArray)))
 
 	// Creation of stat array
 	for _, word1 := range tokenArray {
