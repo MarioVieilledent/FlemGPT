@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-const depth int = 8 // We take in account words until n-depth before the word analyzed, minimum is of course 1
-
 var tokenArray []string = []string{}
 var stats map[string]map[string][]int = map[string]map[string][]int{} // Unique instance of stats
 var jsonOutput []byte = []byte{}                                      // Output to write in json
@@ -73,9 +71,11 @@ func createTokenArray(tokenizedInput [][]string) {
 	// Creation of stat array
 	for _, word1 := range tokenArray {
 		stats[word1] = map[string][]int{}
-		for _, word2 := range tokenArray {
-			stats[word1][word2] = make([]int, depth)
-		}
+		/*
+			for _, word2 := range tokenArray {
+				stats[word1][word2] = make([]int, depth)
+			}
+		*/
 	}
 }
 
@@ -88,11 +88,10 @@ func train(tokenizedInput [][]string) {
 					if i >= 0 {
 						prevWord := paragraph[i]
 						if prevWord != "" && prevWord != "\n" && prevWord != "\r" {
-							if stats[wordToAnalyze][prevWord] != nil {
-								stats[wordToAnalyze][prevWord][j]++
-							} else {
-								fmt.Println("Nil []int for word: " + wordToAnalyze + " and prev: " + prevWord)
+							if stats[wordToAnalyze][prevWord] == nil {
+								stats[wordToAnalyze][prevWord] = make([]int, depth)
 							}
+							stats[wordToAnalyze][prevWord][j]++
 						}
 					}
 					j++

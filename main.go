@@ -8,6 +8,7 @@ import (
 func main() {
 	fmt.Println("Reading file...")
 	content := readFile("input.txt")
+	// content := readFile("input_small.txt")
 
 	learn(content)
 
