@@ -7,7 +7,7 @@ import (
 
 func main() {
 	fmt.Println("Reading file...")
-	content := readFile("input.txt")
+	content := readFile("inputFiles/big.txt")
 	// content := readFile("input_small.txt")
 
 	learn(content)
@@ -15,8 +15,11 @@ func main() {
 	fmt.Println("Writing JSON output...")
 	writeFile("output.json", string(jsonOutput))
 
-	fmt.Println("Generation...")
-	loop()
+	fmt.Println("Starting web server...")
+	startApi()
+
+	// fmt.Println("Generation...")
+	// loop()
 }
 
 func readFile(filename string) string {

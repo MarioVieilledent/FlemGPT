@@ -1,0 +1,4 @@
+All cats are cute.
+Not all dogs are cute.
+Girls like dogs.
+Everybody like cats.

@@ -42,9 +42,9 @@ func calculateScore(wordN string, previousWords []string, wordStats map[string][
 					if i > 0 {
 						for word, stats := range wordStats {
 							if word == previousWords[i] {
-								score += (occurInfluence * float64(stats[nMinus])) *
-									(squareDistanceFromWordInfluence * float64(depth-nMinus) * float64(depth-nMinus)) *
-									(wordLengthInfluence * float64(len(word)))
+								score += (coefOccur * float64(stats[nMinus])) *
+									(coefDistance * float64(depth-nMinus) * float64(depth-nMinus)) *
+									(coefWordLength * float64(len(word)))
 							}
 						}
 					}
@@ -71,7 +71,7 @@ func loop() {
 	}
 }
 
-func continueText(sentence []string, nbWords int) {
+func continueText(sentence []string, nbWords int) []string {
 	var word string
 
 	for _, w := range sentence {
@@ -84,6 +84,8 @@ func continueText(sentence []string, nbWords int) {
 		sentence = append(sentence, word)
 	}
 
-	fmt.Println("\n\n result:")
-	fmt.Println(sentence)
+	// fmt.Println("\n\n result:")
+	// fmt.Println(sentence)
+
+	return sentence
 }
