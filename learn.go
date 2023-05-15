@@ -7,11 +7,18 @@ import (
 	"strings"
 )
 
+var input string
+
 var tokenArray []string = []string{}
 var stats map[string]map[string][]int = map[string]map[string][]int{} // Unique instance of stats
 var jsonOutput []byte = []byte{}                                      // Output to write in json
 
-func learn(input string) {
+func learn() {
+	// Reset
+	tokenArray = []string{}
+	jsonOutput = []byte{}
+	stats = map[string]map[string][]int{}
+
 	// Tokenise input
 	fmt.Println("Tokenization...")
 	tokenizedInput := tokenize(input)

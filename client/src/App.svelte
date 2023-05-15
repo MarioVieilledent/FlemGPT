@@ -7,6 +7,8 @@
 
   let results: string[] = [];
 
+  let training: boolean = false; // Process of learning currently running
+
   let depth: number;
   let nbWords: number;
   let randPickOverBest: number;
@@ -35,6 +37,14 @@
       .then(f);
   };
 
+  const learn = () => {
+    training = true;
+    api("/learn", (res) => {
+      console.log(res);
+      training = false;
+    });
+  };
+
   onMount(() => {
     api("/get/all", (res: any) => {
       console.log(res);
@@ -51,6 +61,7 @@
 
 <div class="f main">
   <div class="fc left">
+    <button on:click={() => learn()}>Train</button>
     <span>depth</span>
     <input
       type="number"
@@ -108,6 +119,7 @@
     <input
       type="text"
       placeholder="Prompt..."
+      disabled={training}
       bind:value={prompt}
       on:keyup={(event) => keyUpPrompt(event)}
     />

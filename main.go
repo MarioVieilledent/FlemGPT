@@ -7,10 +7,16 @@ import (
 
 func main() {
 	fmt.Println("Reading file...")
-	content := readFile("inputFiles/big.txt")
-	// content := readFile("input_small.txt")
+	input = readFile("inputFiles/big.txt")
+	input += readFile("inputFiles/alice29.txt")
+	input += readFile("inputFiles/asyoulik.txt")
+	input += readFile("inputFiles/bible.txt")
+	input += readFile("inputFiles/input.txt")
+	input += readFile("inputFiles/lcet10.txt")
+	input += readFile("inputFiles/plrabn12.txt")
+	input += readFile("inputFiles/world192.txt")
 
-	learn(content)
+	learn()
 
 	fmt.Println("Writing JSON output...")
 	writeFile("output.json", string(jsonOutput))
